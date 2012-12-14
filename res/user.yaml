@@ -5,7 +5,9 @@
 queryURL:   http://folding.extremeoverclocking.com/xml/user_summary.php?u=
 
 # The path from current running directory to the image to use used as
-# a background for the statistics
+# a background for the statistics.  Right now this is a relative path
+# from the current directory when running the program.  You might want
+# to use an absolute path.
 backgroundImage: res/background.png
 
 # Each individual statistic must be configured separately.
