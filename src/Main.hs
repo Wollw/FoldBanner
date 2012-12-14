@@ -72,8 +72,8 @@ exec opts@MyOptions{..} = do
 -------------------------------------------------------------------------------
 
 getStats :: BannerConfig -> String -> IO (Maybe Element)
-getStats (BannerConfig url _ _) id = do
-    xml <- openAsXML $ url ++ id
+getStats cfg id = do
+    xml <- openAsXML $ (queryURL cfg) ++ id
     case xml of
         Left _      -> return Nothing
         Right stats -> return $ Just ((onlyElems stats) !! 1)

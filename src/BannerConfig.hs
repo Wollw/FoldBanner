@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module BannerConfig (
-    BannerConfig(BannerConfig, backgroundImage, statConfigs),
+    BannerConfig(BannerConfig, queryURL, backgroundImage, statConfigs),
     StatConfig(StatConfig),
     Color(Color),
     Position(Position),
