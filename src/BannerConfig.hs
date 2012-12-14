@@ -54,7 +54,7 @@ getString key map = case lookup of
   where
     lookup = M.lookup (YStr key) map >>= unStr >>= (\bs -> (Just (BS.unpack bs)))
 
-getId          = getString "ida"
+getId          = getString "id"
 getQueryURL    = getString "queryURL"
 getBGImage     = getString "bgImage"
 

@@ -1,6 +1,6 @@
 id:         212997
 queryURL:   http://folding.extremeoverclocking.com/xml/team_summary.php?t=
-bgImage: background.png
+bgImage: res/background.png
 
 statConfigs:
   - key:  Team_Name
@@ -24,4 +24,3 @@ statConfigs:
     position:
         x: 8
         y: 48
-

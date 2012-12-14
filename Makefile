@@ -1,7 +1,10 @@
 TARGET=foldbanner
 
+SRCDIR=src
+MAINSRC=$(SRCDIR)/Main.hs
+
 all:
-	ghc $(TARGET)
+	ghc --make -i$(SRCDIR) $(MAINSRC) -o $(TARGET)
 
 clean:
-	rm *.hi *.o $(TARGET)
+	rm $(SRCDIR)/*.hi $(SRCDIR)/*.o $(TARGET)
