@@ -13,3 +13,5 @@ Additional required Haskell modules:
 To run:
 
     $ foldbanner -c CONFIG.yaml -b BACKGROUND.png -o OUTPUT.png -i TEAM_OR_USER_ID
+
+
