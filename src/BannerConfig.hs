@@ -1,17 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module BannerConfig (
-    BannerConfig(BannerConfig, queryURL, statConfigs),
-    StatConfig(StatConfig),
-    Color(Color),
-    Position(Position),
-    getBannerConfig) where
+module BannerConfig
+    ( BannerConfig(BannerConfig, queryURL, statConfigs)
+    , StatConfig(StatConfig)
+    , Color(Color)
+    , Position(Position)
+    , readBannerConfig
+    ) where
 
-import Data.Yaml.YamlLight
 import qualified Data.ByteString.Char8 as BS
+import qualified Data.Map as M
 import Data.Map (Map)
 import Data.Maybe
-import qualified Data.Map as M
+import Data.Yaml.YamlLight
 
 data BannerConfig = BannerConfig
     { queryURL        :: String
@@ -39,16 +40,24 @@ data Position = Position
     , y :: Double
     } deriving (Show)
 
-getBannerConfig :: YamlLight -> Maybe BannerConfig
-getBannerConfig map = unMap map >>= makeBannerConfig
 
-makeBannerConfig :: Map YamlLight YamlLight -> Maybe BannerConfig
-makeBannerConfig map = Just
-    (BannerConfig {
-        queryURL        = getQueryURL map,
-        statConfigs     = getStatConfigs map
-      }
-    )
+-- Converts a configuration file into a BannerConfig value
+readBannerConfig :: FilePath -> IO (Maybe BannerConfig)
+readBannerConfig configFile = do
+    yaml <- parseYamlFile configFile
+    return $ getBannerConfig yaml
+  where
+    getBannerConfig map  = unMap map >>= makeBannerConfig
+    makeBannerConfig map = Just
+        ( BannerConfig
+            { queryURL        = getString "queryURL" map
+            , statConfigs     = getStatConfigs map })
+
+
+-- The following functions are all used to access fields of the
+-- configuration file and convert them into their proper types.
+getDouble :: BS.ByteString -> Map YamlLight YamlLight -> Double
+getDouble key map = read $ getString key map :: Double
 
 getString :: BS.ByteString -> Map YamlLight YamlLight -> String
 getString key map = case lookup of
@@ -56,8 +65,6 @@ getString key map = case lookup of
     Just val -> val
   where
     lookup = M.lookup (YStr key) map >>= unStr >>= (\bs -> (Just (BS.unpack bs)))
-
-getQueryURL    = getString "queryURL"
 
 getStatConfigs :: Map YamlLight YamlLight -> [StatConfig]
 getStatConfigs map = case lookup of 
@@ -95,7 +102,3 @@ getPosition map = case lookup of
     makePosition map = Just (Position
                             (getDouble "x" map)
                             (getDouble "y" map))
-
-
-getDouble :: BS.ByteString -> Map YamlLight YamlLight -> Double
-getDouble key map = read $ getString key map :: Double

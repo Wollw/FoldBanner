@@ -5,17 +5,16 @@
 -- http://zuttobenkyou.wordpress.com/2011/04/19/haskell-using-cmdargs-single-and-multi-mode/
 -- to make the commandline options for this program look pretty.
 
+import BannerConfig
+import Control.Monad (when)
+import Data.Maybe
+import Graphics.Rendering.Cairo
+import Network.Download
 import System.Console.CmdArgs
 import System.Environment (getArgs, withArgs)
 import System.Exit
-import Control.Monad (when)
-import Network.Download
-import Data.Maybe
-import Data.Yaml.YamlLight
 import Text.XML.Light
 import Text.XML.Light.Cursor
-import Graphics.Rendering.Cairo
-import BannerConfig
 
 data MyOptions = MyOptions
     { config     :: FilePath
@@ -67,13 +66,16 @@ optionHandler opts@MyOptions{..}  = do
 
 exec :: MyOptions -> IO ()
 exec opts@MyOptions{..} = do
-    c <- parseYamlFile config
-    let cfg = fromJust $ getBannerConfig c
-    stats <- getStats cfg ident
-    createBanner cfg (fromJust stats) output background
+    cfg <- readBannerConfig config
+    case cfg of
+        Nothing  -> putStrLn "Error loading config file." >> exitWith (ExitFailure 1)
+        Just cfg -> do
+            stats <- getStats cfg ident
+            createBanner cfg (fromJust stats) output background
 
 -------------------------------------------------------------------------------
 
+-- Retrieve the statistics from the statistics server
 getStats :: BannerConfig -> String -> IO (Maybe Element)
 getStats cfg id = do
     xml <- openAsXML $ (queryURL cfg) ++ id
@@ -81,6 +83,7 @@ getStats cfg id = do
         Left _      -> return Nothing
         Right stats -> return $ Just ((onlyElems stats) !! 1)
 
+-- Create the statistics banner and save it to the output file
 createBanner :: BannerConfig -> Element -> FilePath -> FilePath -> IO ()
 createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
     renderWith surface $ do mapM_ writeStat $ (statConfigs cfg)
@@ -96,10 +99,10 @@ createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
         Just e -> strContent e
     findElementByName key stats = findElement (unqual key) stats
 
+-- Write a string with a color and position to the surface.
 writeText :: String -> Color -> Position -> Render ()
 writeText str (Color r g b a) (Position x y) = do
     save
-
     lineWidth <- getLineWidth
     (TextExtents xb yb w h _ _) <- textExtents str
 
