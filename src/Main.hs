@@ -90,14 +90,15 @@ createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
     surfaceWriteToPNG surface out
     return ()
   where
-    writeStat (StatConfig key name fontFace size key_color val_color stroke_width pos) = do
+    writeStat (StatConfig key key_type name fontFace size key_color val_color stroke_width pos) = do
         selectFontFace fontFace FontSlantNormal FontWeightNormal
         setFontSize size
-        writeText name (getData key) key_color val_color stroke_width pos
-    getData key = case findElementByName key stats of
+        writeText name (getData key_type key) key_color val_color stroke_width pos
+    getData key_type key = case findElementByName key_type key stats of
         Nothing -> "Error"
         Just e  -> strContent e
-    findElementByName key stats = findElement (unqual key) stats
+    findElementByName key_type key stats = findElement (unqual key) $
+        fromJust $ findElement (unqual key_type) stats
 
 -- Write a string with a color and position to the surface.
 writeText :: String -> String -> Color -> Color -> Double -> Position -> Render ()

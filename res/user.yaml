@@ -27,7 +27,7 @@ statConfigs:
         y: 20
 
   - key:  Team_Rank     # Repeat for each statistic you want to display
-    type: team
+    type: user
     name: "   Rank on Team: "
     font: monospace
     size: 12
@@ -64,11 +64,11 @@ statConfigs:
         a: 1.0
     position:
         x: 203
-        y: 80
+        y: 68
 
-  - key:  Users_Active
+  - key:  Points_Today
     type: team
-    name: "   Active Users: "
+    name: "   Points Today: "
     font: monospace
     size: 12
     stroke_width: 0.25
@@ -84,7 +84,7 @@ statConfigs:
         a: 1.0
     position:
         x: 203
-        y: 44
+        y: 80
 
   - key:  Users
     type: team
@@ -104,7 +104,7 @@ statConfigs:
         a: 1.0
     position:
         x: 203
-        y: 56
+        y: 44
 
   - key:  Points
     type: team
@@ -124,7 +124,7 @@ statConfigs:
         a: 1.0
     position:
         x: 203
-        y: 68
+        y: 56
 
   - key:  TeamID
     type: team
@@ -165,7 +165,6 @@ statConfigs:
     position:
         x: 203
         y: 20
-
 
   - key:  Rank
     type: team

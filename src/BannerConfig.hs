@@ -20,14 +20,15 @@ data BannerConfig = BannerConfig
     } deriving (Show)
 
 data StatConfig = StatConfig
-    { key          :: String
-    , name         :: String
-    , fontFace     :: String
-    , size         :: Double
-    , key_color    :: Color
-    , val_color    :: Color
-    , stroke_width :: Double
-    , position     :: Position
+    { key          :: String   -- The statistic's key, ie: Team_Name or Points
+    , key_type     :: String   -- The section the key is in: user, team, status
+    , name         :: String   -- The name to display for the key
+    , fontFace     :: String   -- The font to use
+    , size         :: Double   -- The font size
+    , key_color    :: Color    -- The color to use for the key name
+    , val_color    :: Color    -- The color to use for the value
+    , stroke_width :: Double   -- The amount to stroke the text
+    , position     :: Position -- The x,y position for this statistic
     } deriving (Show)
 
 data Color = Color
@@ -77,6 +78,7 @@ getStatConfigs map = case lookup of
              >>= mapM (\cfgMap -> Just (getStatConfig (unMap cfgMap)))
     getStatConfig map = StatConfig {
              key          = getString "key" (fromJust map),
+             key_type     = getString "type" (fromJust map),
              name         = getString "name" (fromJust map),
              fontFace     = getString "font" (fromJust map),
              size         = getDouble "size" (fromJust map),
