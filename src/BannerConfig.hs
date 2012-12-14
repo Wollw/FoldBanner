@@ -18,6 +18,7 @@ data BannerConfig = BannerConfig
 data StatConfig = StatConfig
     { key      :: String
     , name     :: String
+    , size     :: Int
     , color    :: Color
     , position :: Position
     } deriving (Show)
@@ -68,6 +69,7 @@ getStatConfigs map = case lookup of
     getStatConfig map = StatConfig {
              key  = getString "key" (fromJust map),
              name = getString "name" (fromJust map),
+             size = getInt "size" (fromJust map),
              color = getColor (fromJust map),
              position = getPosition (fromJust map)}
 
