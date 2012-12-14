@@ -44,7 +44,7 @@ getOpts = cmdArgs $ myProgOpts
     &= program _PROGRAM_NAME
 
 _PROGRAM_NAME = "foldbanner"
-_PROGRAM_VERSION = "1.0.1"
+_PROGRAM_VERSION = "1.0.2"
 _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_ABOUT = "A configurable program for generating statistics banners for Folding@home"
 _COPYRIGHT = "(C) David Shere 2012"
