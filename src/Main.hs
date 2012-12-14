@@ -98,7 +98,6 @@ writeText str (Color r g b a) (Position x y) = do
     save
 
     lineWidth <- getLineWidth
-
     (TextExtents xb yb w h _ _) <- textExtents str
 
     moveTo x y

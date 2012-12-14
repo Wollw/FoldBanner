@@ -1,21 +1,29 @@
+## Example User Configuration File
+
+# queryURL is the url used to request the XML user statistics file.
+# This is the url for querying the user database
 queryURL:   http://folding.extremeoverclocking.com/xml/user_summary.php?u=
+
+# The path from current running directory to the image to use used as
+# a background for the statistics
 backgroundImage: res/background.png
 
+# Each individual statistic must be configured separately.
 statConfigs:
-  - key:  User_Name
-    name: User
-    font: monospace
-    size: 16
-    color:
+  - key:  User_Name     # XML element name for the statistic
+    name: User          # name that will be used on the output
+    font: monospace     # font face for the text
+    size: 16            # font size
+    color:              # RGBA values for the text color.  Range is 0.0-1.0
         r: 1.0
         g: 1.0
         b: 1.0
         a: 1.0
-    position:
+    position:           # lower left corner of the output for this statistic
         x: 8
         y: 24
 
-  - key:  Team_Rank
+  - key:  Team_Rank     # Repeat for each statistic you want to display
     name: Team Rank
     font: monospace
     size: 16
