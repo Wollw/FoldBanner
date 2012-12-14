@@ -1,4 +1,4 @@
-# Fold Banner #
+# Foldbanner #
 
 This is a configurable Folding@home banner generator written in Haskell and
 configurable with [YAML](http://www.yaml.org/) config files.
