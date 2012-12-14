@@ -63,6 +63,7 @@ optionHandler opts@MyOptions{..}  = do
     when (null config)     $ putStrLn "--config is blank!"     >> exitWith (ExitFailure 1)
     when (null background) $ putStrLn "--background is blank!" >> exitWith (ExitFailure 1)
     when (null output)     $ putStrLn "--output is blank!"     >> exitWith (ExitFailure 1)
+    when (not (null ident) && not (null stats)) $ putStrLn "--ident and --stats are both defined! Use one!"      >> exitWith (ExitFailure 1)
     when (null ident && null stats) $ putStrLn "--ident and --stats are blank! Use one!"      >> exitWith (ExitFailure 1)
     -- When you're done, pass the (corrected, or not) options to your actual program.
     exec opts
