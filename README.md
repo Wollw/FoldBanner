@@ -6,7 +6,7 @@ configurable with [YAML](http://www.yaml.org/) config files.
 Additional required Haskell modules:
 * [cmdargs](http://hackage.haskell.org/package/cmdargs)
 * [download](http://hackage.haskell.org/package/download)
-* [yamllight](http://hackage.haskell.org/package/yaml-light)
+* [yaml-light](http://hackage.haskell.org/package/yaml-light)
 * [xml](http://hackage.haskell.org/package/xml)
 * [cairo](http://hackage.haskell.org/package/cairo)
 
