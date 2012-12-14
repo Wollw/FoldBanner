@@ -15,11 +15,13 @@ import System.Environment (getArgs, withArgs)
 import System.Exit
 import Text.XML.Light
 import Text.XML.Light.Cursor
+import Text.XML.Light.Input
 
 data MyOptions = MyOptions
     { config     :: FilePath
     , background :: FilePath
     , output     :: FilePath
+    , stats      :: FilePath
     , ident      :: String
     } deriving (Data, Typeable, Show, Eq)
 
@@ -29,6 +31,7 @@ myProgOpts = MyOptions
     { config     = def &= typFile &= help "the banner configuration file"
     , background = def &= typFile &= help "the background image (must be png)"
     , output     = def &= typFile &= help "the output file (must be png)"
+    , stats      = def &= typFile &= help "the xml statistics file (from extremeoverclocking.com)"
     , ident      = def &= typ "ID" &= help "the user or team id" }
 
 getOpts :: IO MyOptions
@@ -60,7 +63,7 @@ optionHandler opts@MyOptions{..}  = do
     when (null config)     $ putStrLn "--config is blank!"     >> exitWith (ExitFailure 1)
     when (null background) $ putStrLn "--background is blank!" >> exitWith (ExitFailure 1)
     when (null output)     $ putStrLn "--output is blank!"     >> exitWith (ExitFailure 1)
-    when (null ident)      $ putStrLn "--ident is blank!"      >> exitWith (ExitFailure 1)
+    when (null ident && null stats) $ putStrLn "--ident and --stats are blank! Use one!"      >> exitWith (ExitFailure 1)
     -- When you're done, pass the (corrected, or not) options to your actual program.
     exec opts
 
@@ -70,18 +73,28 @@ exec opts@MyOptions{..} = do
     case cfg of
         Nothing  -> putStrLn "Error loading config file." >> exitWith (ExitFailure 1)
         Just cfg -> do
-            stats <- getStats cfg ident
-            createBanner cfg (fromJust stats) output background
+            case (null stats) of
+                True -> do
+                    stats <- getStats cfg (StatID ident)
+                    createBanner cfg (fromJust stats) output background
+                False -> do
+                    stats <- getStats cfg (StatFile stats)
+                    createBanner cfg (fromJust stats) output background
 
 -------------------------------------------------------------------------------
 
--- Retrieve the statistics from the statistics server
-getStats :: BannerConfig -> String -> IO (Maybe Element)
-getStats cfg id = do
+data StatSource = StatFile FilePath | StatID String
+
+-- Retrieve the statistics from the statistics server or local file
+getStats :: BannerConfig -> StatSource -> IO (Maybe Element)
+getStats cfg (StatID id) = do
     xml <- openAsXML $ (queryURL cfg) ++ id
     case xml of
         Left _      -> return Nothing
         Right stats -> return $ Just ((onlyElems stats) !! 1)
+getStats cfg (StatFile file) = do
+    xmlFile <- readFile file
+    return $ parseXMLDoc xmlFile
 
 -- Create the statistics banner and save it to the output file
 createBanner :: BannerConfig -> Element -> FilePath -> FilePath -> IO ()

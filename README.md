@@ -10,8 +10,11 @@ Additional required Haskell modules:
 * [xml](http://hackage.haskell.org/package/xml)
 * [cairo](http://hackage.haskell.org/package/cairo)
 
-To run:
+## Usage ##
+For querying the server:
 
     $ foldbanner -c CONFIG.yaml -b BACKGROUND.png -o OUTPUT.png -i TEAM_OR_USER_ID
 
+or for using a local file:
 
+    $ foldbanner -c CONFIG.yaml -b BACKGROUND.png -o OUTPUT.png -s STATSFILE.xml
