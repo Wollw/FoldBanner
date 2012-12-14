@@ -41,7 +41,7 @@ getOpts = cmdArgs $ myProgOpts
     &= program _PROGRAM_NAME
 
 _PROGRAM_NAME = "foldbanner"
-_PROGRAM_VERSION = "1.0"
+_PROGRAM_VERSION = "1.0.1"
 _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_ABOUT = "A configurable program for generating statistics banners for Folding@home"
 _COPYRIGHT = "(C) David Shere 2012"
@@ -90,27 +90,33 @@ createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
     surfaceWriteToPNG surface out
     return ()
   where
-    writeStat (StatConfig key name fontFace size color pos) = do
+    writeStat (StatConfig key name fontFace size key_color val_color stroke_width pos) = do
         selectFontFace fontFace FontSlantNormal FontWeightNormal
         setFontSize size
-        writeText (name ++ ": " ++ (getData key)) color pos
+        writeText name (getData key) key_color val_color stroke_width pos
     getData key = case findElementByName key stats of
         Nothing -> "Error"
-        Just e -> strContent e
+        Just e  -> strContent e
     findElementByName key stats = findElement (unqual key) stats
 
 -- Write a string with a color and position to the surface.
-writeText :: String -> Color -> Position -> Render ()
-writeText str (Color r g b a) (Position x y) = do
+writeText :: String -> String -> Color -> Color -> Double -> Position -> Render ()
+writeText keyString valString keyColor valColor strokeWidth (Position x y) = do
     save
-    lineWidth <- getLineWidth
-    (TextExtents xb yb w h _ _) <- textExtents str
 
     moveTo x y
-    textPath str
-    setSourceRGBA r g b a
+    textPath keyString
+    setSourceRGBA (red keyColor) (green keyColor) (blue keyColor) (alpha keyColor)
     fillPreserve
-    setLineWidth 0.75
+    (x, y) <- getCurrentPoint -- save current position
+    setLineWidth strokeWidth
+    stroke
+
+    moveTo x y
+    textPath valString
+    setSourceRGBA (red valColor) (green valColor) (blue valColor) (alpha valColor)
+    fillPreserve
+    setLineWidth strokeWidth
     stroke
 
     restore

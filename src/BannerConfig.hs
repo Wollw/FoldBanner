@@ -3,7 +3,7 @@
 module BannerConfig
     ( BannerConfig(BannerConfig, queryURL, statConfigs)
     , StatConfig(StatConfig)
-    , Color(Color)
+    , Color(Color, red, green, blue, alpha)
     , Position(Position)
     , readBannerConfig
     ) where
@@ -20,12 +20,14 @@ data BannerConfig = BannerConfig
     } deriving (Show)
 
 data StatConfig = StatConfig
-    { key      :: String
-    , name     :: String
-    , fontFace :: String
-    , size     :: Double
-    , color    :: Color
-    , position :: Position
+    { key          :: String
+    , name         :: String
+    , fontFace     :: String
+    , size         :: Double
+    , key_color    :: Color
+    , val_color    :: Color
+    , stroke_width :: Double
+    , position     :: Position
     } deriving (Show)
 
 data Color = Color
@@ -74,19 +76,21 @@ getStatConfigs map = case lookup of
     lookup = M.lookup (YStr "statConfigs") map >>= unSeq
              >>= mapM (\cfgMap -> Just (getStatConfig (unMap cfgMap)))
     getStatConfig map = StatConfig {
-             key  = getString "key" (fromJust map),
-             name = getString "name" (fromJust map),
-             fontFace = getString "font" (fromJust map),
-             size = getDouble "size" (fromJust map),
-             color = getColor (fromJust map),
-             position = getPosition (fromJust map)}
+             key          = getString "key" (fromJust map),
+             name         = getString "name" (fromJust map),
+             fontFace     = getString "font" (fromJust map),
+             size         = getDouble "size" (fromJust map),
+             key_color    = getColor "key_color" (fromJust map),
+             val_color    = getColor "val_color" (fromJust map),
+             stroke_width = getDouble "stroke_width" (fromJust map),
+             position     = getPosition (fromJust map)}
 
-getColor :: Map YamlLight YamlLight -> Color
-getColor map = case lookup of
+getColor :: BS.ByteString -> Map YamlLight YamlLight -> Color
+getColor key map = case lookup of
     Nothing -> Color 0 0 0 1
     Just color -> color
   where
-    lookup        = M.lookup (YStr "color") map >>= unMap >>= makeColor
+    lookup        = M.lookup (YStr key) map >>= unMap >>= makeColor
     makeColor map = Just (Color
                          (getDouble "r" map)
                          (getDouble "g" map)
