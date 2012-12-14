@@ -3,7 +3,7 @@
 This is a configurable Folding@home banner generator written in Haskell and
 configurable with [YAML](http://www.yaml.org/) config files.
 
-Additional Required Haskell modules:
+Additional required Haskell modules:
 * [cmdargs](http://hackage.haskell.org/package/cmdargs)
 * [download](http://hackage.haskell.org/package/download)
 * [yamllight](http://hackage.haskell.org/package/yaml-light)
