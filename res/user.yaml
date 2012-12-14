@@ -1,0 +1,29 @@
+queryURL:   http://folding.extremeoverclocking.com/xml/user_summary.php?u=
+backgroundImage: res/background.png
+
+statConfigs:
+  - key:  User_Name
+    name: User
+    font: monospace
+    size: 16
+    color:
+        r: 1.0
+        g: 1.0
+        b: 1.0
+        a: 1.0
+    position:
+        x: 8
+        y: 24
+
+  - key:  Team_Rank
+    name: Rank
+    font: monospace
+    size: 16
+    color:
+        r: 1.0
+        g: 1.0
+        b: 1.0
+        a: 1.0
+    position:
+        x: 8
+        y: 48

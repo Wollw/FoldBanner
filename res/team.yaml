@@ -1,10 +1,10 @@
-id:         212997
 queryURL:   http://folding.extremeoverclocking.com/xml/team_summary.php?t=
-bgImage: res/background.png
+backgroundImage: res/background.png
 
 statConfigs:
   - key:  Team_Name
     name: Team
+    font: monospace
     size: 16
     color:
         r: 1.0
@@ -17,6 +17,7 @@ statConfigs:
 
   - key:  Rank
     name: Rank
+    font: monospace
     size: 16
     color:
         r: 1.0
