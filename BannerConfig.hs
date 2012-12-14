@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
---module BannerConfig (BannerConfig, StatConfig, Color, Position, makeBannerConfig) where
-module BannerConfig where
+module BannerConfig (BannerConfig, StatConfig, Color, Position, getBannerConfig) where
 
 import Data.Yaml.YamlLight
 import qualified Data.ByteString.Char8 as BS
@@ -34,6 +33,9 @@ data Position = Position
     { x :: Int
     , y :: Int
     } deriving (Show)
+
+getBannerConfig :: YamlLight -> Maybe BannerConfig
+getBannerConfig map = unMap map >>= makeBannerConfig
 
 makeBannerConfig :: Map YamlLight YamlLight -> Maybe BannerConfig
 makeBannerConfig map = Just
