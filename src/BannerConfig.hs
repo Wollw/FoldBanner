@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module BannerConfig (
-    BannerConfig(BannerConfig, queryURL, backgroundImage, statConfigs),
+    BannerConfig(BannerConfig, queryURL, statConfigs),
     StatConfig(StatConfig),
     Color(Color),
     Position(Position),
@@ -15,7 +15,6 @@ import qualified Data.Map as M
 
 data BannerConfig = BannerConfig
     { queryURL        :: String
-    , backgroundImage :: String
     , statConfigs     :: [StatConfig]
     } deriving (Show)
 
@@ -47,7 +46,6 @@ makeBannerConfig :: Map YamlLight YamlLight -> Maybe BannerConfig
 makeBannerConfig map = Just
     (BannerConfig {
         queryURL        = getQueryURL map,
-        backgroundImage = getBGImage map,
         statConfigs     = getStatConfigs map
       }
     )
@@ -60,7 +58,6 @@ getString key map = case lookup of
     lookup = M.lookup (YStr key) map >>= unStr >>= (\bs -> (Just (BS.unpack bs)))
 
 getQueryURL    = getString "queryURL"
-getBGImage     = getString "backgroundImage"
 
 getStatConfigs :: Map YamlLight YamlLight -> [StatConfig]
 getStatConfigs map = case lookup of 

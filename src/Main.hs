@@ -18,17 +18,19 @@ import Graphics.Rendering.Cairo
 import BannerConfig
 
 data MyOptions = MyOptions
-    { config :: FilePath
-    , output :: FilePath
-    , ident  :: String
+    { config     :: FilePath
+    , background :: FilePath
+    , output     :: FilePath
+    , ident      :: String
     } deriving (Data, Typeable, Show, Eq)
 
 -- Customize your options, including help messages, shortened names, etc.
 myProgOpts :: MyOptions
 myProgOpts = MyOptions
-    { config = def &= typFile &= help "the banner configuration file"
-    , output = def &= typFile &= help "the output file (must be png)"
-    , ident  = def &= typ "ID" &= help "the user or team id" }
+    { config     = def &= typFile &= help "the banner configuration file"
+    , background = def &= typFile &= help "the background image (must be png)"
+    , output     = def &= typFile &= help "the output file (must be png)"
+    , ident      = def &= typ "ID" &= help "the user or team id" }
 
 getOpts :: IO MyOptions
 getOpts = cmdArgs $ myProgOpts
@@ -56,9 +58,10 @@ main = do
 optionHandler :: MyOptions -> IO ()
 optionHandler opts@MyOptions{..}  = do
     -- Take the opportunity here to weed out ugly, malformed, or invalid arguments.
-    when (null config) $ putStrLn "--config is blank!" >> exitWith (ExitFailure 1)
-    when (null output) $ putStrLn "--output is blank!" >> exitWith (ExitFailure 1)
-    when (null ident)  $ putStrLn "--ident is blank!"  >> exitWith (ExitFailure 1)
+    when (null config)     $ putStrLn "--config is blank!"     >> exitWith (ExitFailure 1)
+    when (null background) $ putStrLn "--background is blank!" >> exitWith (ExitFailure 1)
+    when (null output)     $ putStrLn "--output is blank!"     >> exitWith (ExitFailure 1)
+    when (null ident)      $ putStrLn "--ident is blank!"      >> exitWith (ExitFailure 1)
     -- When you're done, pass the (corrected, or not) options to your actual program.
     exec opts
 
@@ -67,7 +70,7 @@ exec opts@MyOptions{..} = do
     c <- parseYamlFile config
     let cfg = fromJust $ getBannerConfig c
     stats <- getStats cfg ident
-    createBanner cfg (fromJust stats) output
+    createBanner cfg (fromJust stats) output background
 
 -------------------------------------------------------------------------------
 
@@ -78,10 +81,10 @@ getStats cfg id = do
         Left _      -> return Nothing
         Right stats -> return $ Just ((onlyElems stats) !! 1)
 
-createBanner :: BannerConfig -> Element -> FilePath -> IO ()
-createBanner cfg stats output = withImageSurfaceFromPNG (backgroundImage cfg) $ \surface -> do
+createBanner :: BannerConfig -> Element -> FilePath -> FilePath -> IO ()
+createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
     renderWith surface $ do mapM_ writeStat $ (statConfigs cfg)
-    surfaceWriteToPNG surface output
+    surfaceWriteToPNG surface out
     return ()
   where
     writeStat (StatConfig key name fontFace size color pos) = do

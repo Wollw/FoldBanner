@@ -3,8 +3,6 @@
 # The query url used for getting team statistics
 queryURL:   http://folding.extremeoverclocking.com/xml/team_summary.php?t=
 
-backgroundImage: res/background.png
-
 statConfigs:
   - key:  Team_Name
     name: Team
