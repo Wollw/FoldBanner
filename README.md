@@ -5,7 +5,7 @@ This is a Folding@home banner generator configurable with
 
 Additional required Haskell modules:
 * [cmdargs](http://hackage.haskell.org/package/cmdargs)
-* [download](http://hackage.haskell.org/package/download)
+* [download-curl](http://hackage.haskell.org/package/download-curl)
 * [yaml-light](http://hackage.haskell.org/package/yaml-light)
 * [xml](http://hackage.haskell.org/package/xml)
 * [cairo](http://hackage.haskell.org/package/cairo)
