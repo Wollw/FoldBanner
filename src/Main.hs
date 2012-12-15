@@ -9,7 +9,7 @@ import BannerConfig
 import Control.Monad (when)
 import Data.Maybe
 import Graphics.Rendering.Cairo
-import Network.Download
+import Network.Curl.Download
 import System.Console.CmdArgs
 import System.Environment (getArgs, withArgs)
 import System.Exit
