@@ -12,6 +12,7 @@ statConfigs:
     font: monospace     # font face for the text
     size: 12            # font size
     stroke_width: 0.25   # The stroke size around the text.
+    comma: no
     key_color:          # RGBA values for the key text color.  Range is 0.0-1.0
         r: 1.0
         g: 1.0
@@ -32,6 +33,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -52,6 +54,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -72,6 +75,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -92,6 +96,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -112,6 +117,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -132,6 +138,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: no
     key_color:
         r: 1.0
         g: 1.0
@@ -152,6 +159,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: no
     key_color:
         r: 1.0
         g: 1.0
@@ -172,6 +180,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -192,6 +201,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -212,6 +222,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -232,6 +243,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0
@@ -252,6 +264,7 @@ statConfigs:
     font: monospace
     size: 12
     stroke_width: 0.25
+    comma: yes
     key_color:
         r: 1.0
         g: 1.0

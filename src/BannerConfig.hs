@@ -28,6 +28,7 @@ data StatConfig = StatConfig
     , key_color    :: Color    -- The color to use for the key name
     , val_color    :: Color    -- The color to use for the value
     , stroke_width :: Double   -- The amount to stroke the text
+    , use_commas   :: String   -- Wether or not to add commas
     , position     :: Position -- The x,y position for this statistic
     } deriving (Show)
 
@@ -85,6 +86,7 @@ getStatConfigs map = case lookup of
              key_color    = getColor "key_color" (fromJust map),
              val_color    = getColor "val_color" (fromJust map),
              stroke_width = getDouble "stroke_width" (fromJust map),
+             use_commas   = getString "comma" (fromJust map),
              position     = getPosition (fromJust map)}
 
 getColor :: BS.ByteString -> Map YamlLight YamlLight -> Color

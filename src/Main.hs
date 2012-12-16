@@ -7,6 +7,8 @@
 
 import BannerConfig
 import Control.Monad (when)
+import Data.List
+import Data.List.Split
 import Data.Maybe
 import Graphics.Rendering.Cairo
 import Network.Curl.Download
@@ -44,7 +46,7 @@ getOpts = cmdArgs $ myProgOpts
     &= program _PROGRAM_NAME
 
 _PROGRAM_NAME = "foldbanner"
-_PROGRAM_VERSION = "1.0.2"
+_PROGRAM_VERSION = "1.0.3"
 _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_ABOUT = "A configurable program for generating statistics banners for Folding@home"
 _COPYRIGHT = "(C) David Shere 2012"
@@ -104,15 +106,24 @@ createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
     surfaceWriteToPNG surface out
     return ()
   where
-    writeStat (StatConfig key key_type name fontFace size key_color val_color stroke_width pos) = do
+    writeStat (StatConfig key key_type name fontFace size key_color val_color stroke_width use_commas pos) = do
         selectFontFace fontFace FontSlantNormal FontWeightNormal
         setFontSize size
-        writeText name (getData key_type key) key_color val_color stroke_width pos
+        let value = if use_commas == "no" then
+                getData key_type key
+            else
+                addCommas $ getData key_type key
+        writeText name value key_color val_color stroke_width pos
     getData key_type key = case findElementByName key_type key stats of
         Nothing -> "Error"
         Just e  -> strContent e
     findElementByName key_type key stats = findElement (unqual key) $
         fromJust $ findElement (unqual key_type) stats
+    addCommas x = h++t
+      where
+        sp = break (== '.') x
+        h  = reverse (intercalate "," $ chunksOf 3 $ reverse $ fst sp)
+        t = snd sp
 
 -- Write a string with a color and position to the surface.
 writeText :: String -> String -> Color -> Color -> Double -> Position -> Render ()

@@ -9,6 +9,7 @@ Additional required Haskell modules:
 * [yaml-light](http://hackage.haskell.org/package/yaml-light)
 * [xml](http://hackage.haskell.org/package/xml)
 * [cairo](http://hackage.haskell.org/package/cairo)
+* [split](http://hackage.haskell.org/package/split)
 
 ## Usage ##
 For querying the server:
