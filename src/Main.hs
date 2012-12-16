@@ -119,8 +119,8 @@ createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
         Just e  -> strContent e
     findElementByName key_type key stats = findElement (unqual key) $
         fromJust $ findElement (unqual key_type) stats
-    addCommas x = h++t
-      where
+    addCommas x = h++t -- addCommas function based on code from here:
+      where            -- http://stackoverflow.com/a/3753207/816685
         sp = break (== '.') x
         h  = reverse (intercalate "," $ chunksOf 3 $ reverse $ fst sp)
         t = snd sp
