@@ -13,6 +13,7 @@ import Data.Maybe
 import Graphics.Rendering.Cairo
 import Network.Curl.Download
 import System.Console.CmdArgs
+import System.Directory
 import System.Environment (getArgs, withArgs)
 import System.Exit
 import Text.XML.Light
@@ -61,9 +62,14 @@ main = do
 -- Before directly calling your main program, you should warn your user about incorrect arguments, if any.
 optionHandler :: MyOptions -> IO ()
 optionHandler opts@MyOptions{..}  = do
+    -- Get some error values
+    bgExists <- doesFileExist background
+    cfgExists <- doesFileExist config
     -- Take the opportunity here to weed out ugly, malformed, or invalid arguments.
     when (null config)     $ putStrLn "--config is blank!"     >> exitWith (ExitFailure 1)
     when (null background) $ putStrLn "--background is blank!" >> exitWith (ExitFailure 1)
+    when (not cfgExists) $ putStrLn ("config file \"" ++ config ++ "\" doesn't exist.") >> exitWith (ExitFailure 1)
+    when (not bgExists) $ putStrLn ("background file \"" ++ background ++ "\" doesn't exist") >> exitWith (ExitFailure 1)
     when (null output)     $ putStrLn "--output is blank!"     >> exitWith (ExitFailure 1)
     when (not (null ident) && not (null stats)) $ putStrLn "--ident and --stats are both defined! Use one!"      >> exitWith (ExitFailure 1)
     when (null ident && null stats) $ putStrLn "--ident and --stats are blank! Use one!"      >> exitWith (ExitFailure 1)
