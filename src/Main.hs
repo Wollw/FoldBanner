@@ -87,10 +87,14 @@ exec opts@MyOptions{..} = do
             case (null stats) of
                 True -> do
                     stats <- getStats cfg (StatID ident)
-                    createBanner cfg (fromJust stats) output background
+                    case stats of
+                        Nothing -> putStrLn "Error retrieving stats."
+                        Just s  -> createBanner cfg s output background
                 False -> do
                     stats <- getStats cfg (StatFile stats)
-                    createBanner cfg (fromJust stats) output background
+                    case stats of
+                        Nothing -> putStrLn "Error retrieving stats."
+                        Just s  -> createBanner cfg s output background
 
 -------------------------------------------------------------------------------
 
