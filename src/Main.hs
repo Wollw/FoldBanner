@@ -7,6 +7,7 @@
 
 import BannerConfig
 import Control.Monad (when)
+import Data.Char
 import Data.List
 import Data.List.Split
 import Data.Maybe
@@ -70,6 +71,7 @@ optionHandler opts@MyOptions{..}  = do
     when (null background) $ putStrLn "--background is blank!" >> exitWith (ExitFailure 1)
     when (not cfgExists) $ putStrLn ("config file \"" ++ config ++ "\" doesn't exist.") >> exitWith (ExitFailure 1)
     when (not bgExists) $ putStrLn ("background file \"" ++ background ++ "\" doesn't exist") >> exitWith (ExitFailure 1)
+    when (not (isSuffixOf ".png" (map toLower background))) $ putStrLn "background file isn't a PNG image" >> exitWith (ExitFailure 1)
     when (null output)     $ putStrLn "--output is blank!"     >> exitWith (ExitFailure 1)
     when (not (null ident) && not (null stats)) $ putStrLn "--ident and --stats are both defined! Use one!"      >> exitWith (ExitFailure 1)
     when (null ident && null stats) $ putStrLn "--ident and --stats are blank! Use one!"      >> exitWith (ExitFailure 1)
