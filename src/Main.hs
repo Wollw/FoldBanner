@@ -114,7 +114,7 @@ getStats cfg (StatFile file) = do
 -- Create the statistics banner and save it to the output file
 createBanner :: BannerConfig -> Element -> FilePath -> FilePath -> IO ()
 createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
-    renderWith surface $ do mapM_ writeStat $ (statConfigs cfg)
+    renderWith surface $ do mapM_ writeStat $ statConfigs cfg
     surfaceWriteToPNG surface out
     return ()
   where
@@ -140,21 +140,29 @@ createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
 -- Write a string with a color and position to the surface.
 writeText :: String -> String -> Color -> Color -> Double -> Position -> Render ()
 writeText keyString valString keyColor valColor strokeWidth (Position x y) = do
-    save
 
-    moveTo x y
-    textPath keyString
-    setSourceRGBA (red keyColor) (green keyColor) (blue keyColor) (alpha keyColor)
-    fillPreserve
-    (x, y) <- getCurrentPoint -- save current position
-    setLineWidth strokeWidth
-    stroke
+    s <- status
+    case s of 
+        StatusSuccess -> render
+        StatusNoMemory -> liftIO $ putStrLn "Error rendering image.  Was the background image a valid PNG image?" >> exitWith (ExitFailure 1)
 
-    moveTo x y
-    textPath valString
-    setSourceRGBA (red valColor) (green valColor) (blue valColor) (alpha valColor)
-    fillPreserve
-    setLineWidth strokeWidth
-    stroke
+  where
+    render = do
+        save
 
-    restore
+        moveTo x y
+        textPath keyString
+        setSourceRGBA (red keyColor) (green keyColor) (blue keyColor) (alpha keyColor)
+        fillPreserve
+        (x, y) <- getCurrentPoint -- save current position
+        setLineWidth strokeWidth
+        stroke
+
+        moveTo x y
+        textPath valString
+        setSourceRGBA (red valColor) (green valColor) (blue valColor) (alpha valColor)
+        fillPreserve
+        setLineWidth strokeWidth
+        stroke
+
+        restore
