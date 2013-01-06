@@ -103,10 +103,17 @@ data StatSource = StatFile FilePath | StatID String
 -- Retrieve the statistics from the statistics server or local file
 getStats :: BannerConfig -> StatSource -> IO (Maybe Element)
 getStats cfg (StatID id) = do
-    xml <- openAsXML $ (queryURL cfg) ++ id
-    case xml of
-        Left _      -> return Nothing
-        Right stats -> return $ Just ((onlyElems stats) !! 1)
+    putStrLn $ show $ queryURL cfg
+    case queryURL cfg of
+        Nothing  -> putStrLn "No queryURL in config file." >> exitWith (ExitFailure 1);
+        Just val -> do
+            xml <- openAsXML $ val ++ id
+            case xml of
+                Left e      -> do
+                    putStrLn e
+                    return Nothing
+                Right stats -> return $ Just ((onlyElems stats) !! 1)
+
 getStats cfg (StatFile file) = do
     xmlFile <- readFile file
     return $ parseXMLDoc xmlFile

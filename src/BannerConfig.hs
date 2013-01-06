@@ -15,7 +15,7 @@ import Data.Maybe
 import Data.Yaml.YamlLight
 
 data BannerConfig = BannerConfig
-    { queryURL        :: String
+    { queryURL        :: Maybe String
     , statConfigs     :: [StatConfig]
     } deriving (Show)
 
@@ -54,8 +54,12 @@ readBannerConfig configFile = do
     getBannerConfig map  = unMap map >>= makeBannerConfig
     makeBannerConfig map = Just
         ( BannerConfig
-            { queryURL        = getString "queryURL" map
+            { queryURL        = getMaybeString "queryURL" map
             , statConfigs     = getStatConfigs map })
+    getMaybeString key map = do
+        case getString key map of
+            "NOT_FOUND" -> Nothing
+            val         -> Just val
 
 
 -- The following functions are all used to access fields of the
@@ -65,7 +69,7 @@ getDouble key map = read $ getString key map :: Double
 
 getString :: BS.ByteString -> Map YamlLight YamlLight -> String
 getString key map = case lookup of
-    Nothing  -> "Not found."
+    Nothing  -> "NOT_FOUND"
     Just val -> val
   where
     lookup = M.lookup (YStr key) map >>= unStr >>= (\bs -> (Just (BS.unpack bs)))
