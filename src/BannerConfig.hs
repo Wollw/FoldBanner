@@ -56,10 +56,7 @@ readBannerConfig configFile = do
         ( BannerConfig
             { queryURL        = getMaybeString "queryURL" map
             , statConfigs     = getStatConfigs map })
-    getMaybeString key map = do
-        case getString key map of
-            "NOT_FOUND" -> Nothing
-            val         -> Just val
+
 
 
 -- The following functions are all used to access fields of the
@@ -73,6 +70,12 @@ getString key map = case lookup of
     Just val -> val
   where
     lookup = M.lookup (YStr key) map >>= unStr >>= (\bs -> (Just (BS.unpack bs)))
+
+getMaybeString :: BS.ByteString -> Map YamlLight YamlLight -> Maybe String
+getMaybeString key map = do
+    case getString key map of
+        "NOT_FOUND" -> Nothing
+        val         -> Just val
 
 getStatConfigs :: Map YamlLight YamlLight -> [StatConfig]
 getStatConfigs map = case lookup of 
