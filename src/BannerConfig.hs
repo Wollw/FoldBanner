@@ -4,6 +4,7 @@ module BannerConfig
     (BannerConfig(
          BannerConfig
         ,queryURL
+        ,originPosition
         ,defaultFontFace
         ,defaultFontSize
         ,defaultKeyColor
@@ -90,7 +91,7 @@ readBannerConfig configFile = do
     makeBannerConfig map = Just
         ( BannerConfig
             { queryURL           = getString "query_url" map
-            , originPosition     = fromJust $ getPosition map
+            , originPosition     = getPosition "position_origin" map
             , defaultFontFace    = fromJust $ getString "font_face" map
             , defaultFontSize    = fromJust $ getString "font_size" map >>= toDouble
             , defaultKeyColor    = fromJust $ getColor "key_color" map
@@ -116,7 +117,7 @@ getStatConfigs map = case lookup of
              key          = fromJust $ getString "key" (fromJust map),
              keyType      = fromJust $ getString "type" (fromJust map),
              name         = fromJust $ getString "name" (fromJust map),
-             position     = fromJust $ getPosition (fromJust map),
+             position     = getPosition "position_offset" (fromJust map),
              fontFace     = getString "font_face" (fromJust map),
              fontSize     = getString "font_size" (fromJust map) >>= toDouble,
              keyColor     = getColor  "key_color" (fromJust map),
@@ -143,10 +144,12 @@ getColor key map = getValue key map >>= unMap >>= makeColor
                          (fromJust (getString "a" map >>= toDouble)))
     toDouble val = Just (read val :: Double)
 
-getPosition :: Map YamlLight YamlLight -> Maybe Position
-getPosition map = M.lookup (YStr "position") map >>= unMap >>= makePosition
+getPosition :: BS.ByteString -> Map YamlLight YamlLight -> Position
+getPosition key map = case M.lookup (YStr key) map of
+    Nothing  -> Position 0 0
+    Just map -> makePosition $ fromJust $ unMap map
   where
-    makePosition map = Just (Position
+    makePosition map = Position
                             (fromJust (getString "x" map >>= toDouble))
-                            (fromJust (getString "y" map >>= toDouble)))
+                            (fromJust (getString "y" map >>= toDouble))
     toDouble val = Just (read val :: Double)

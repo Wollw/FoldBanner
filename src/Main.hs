@@ -94,7 +94,7 @@ exec opts@MyOptions{..} = do
                 False -> do
                     stats <- getStats cfg (StatFile stats)
                     case stats of
-                        Nothing -> putStrLn "Error retrieving stats."
+                        Nothing -> putStrLn "Error reading stats."
                         Just s  -> createBanner cfg s output background
 
 -------------------------------------------------------------------------------
@@ -104,7 +104,6 @@ data StatSource = StatFile FilePath | StatID String
 -- Retrieve the statistics from the statistics server or local file
 getStats :: BannerConfig -> StatSource -> IO (Maybe Element)
 getStats cfg (StatID id) = do
-    putStrLn $ show $ queryURL cfg
     case queryURL cfg of
         Nothing  -> putStrLn "No query_url in config file." >> exitWith (ExitFailure 1);
         Just val -> do
@@ -121,19 +120,11 @@ getStats cfg (StatFile file) = do
 
 -- Create the statistics banner and save it to the output file
 createBanner :: BannerConfig -> Element -> FilePath -> FilePath -> IO ()
-createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
-    renderWith surface $ do mapM_ writeStat $ statConfigs cfg
+createBanner mainConfig stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
+    renderWith surface $ do mapM_ writeStat $ statConfigs mainConfig
     surfaceWriteToPNG surface out
     return ()
   where
-    writeStat cfg = do
-        selectFontFace (fromJust $ fontFace cfg) FontSlantNormal FontWeightNormal
-        setFontSize $ fromJust $ fontSize cfg
-        let value = if fromJust $ useCommas cfg then
-                addCommas $ getData (keyType cfg) (key cfg)
-            else
-                getData (keyType cfg) (key cfg)
-        writeText (BannerConfig.name cfg) value (fromJust $ keyColor cfg) (fromJust $ valueColor cfg) (fromJust $ strokeWidth cfg) (position cfg)
     getData keyType key = case findElementByName keyType key stats of
         Nothing -> "Error"
         Just e  -> strContent e
@@ -144,10 +135,34 @@ createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
         sp = break (== '.') x
         h  = reverse (intercalate "," $ chunksOf 3 $ reverse $ fst sp)
         t = snd sp
+    writeStat cfg = do
+        selectFontFace statFontFace FontSlantNormal FontWeightNormal
+        setFontSize statFontSize
+        let value = if fromJust $ useCommas cfg then
+                addCommas $ getData (keyType cfg) (key cfg)
+            else
+                getData (keyType cfg) (key cfg)
+        writeText (BannerConfig.name cfg) value statKeyColor statValueColor statStrokeWidth (originPosition mainConfig) (position cfg)
+      where
+        statFontFace = case fontFace cfg of
+            Nothing  -> defaultFontFace mainConfig
+            Just val -> val
+        statFontSize = case fontSize cfg of
+            Nothing  -> defaultFontSize mainConfig
+            Just val -> val
+        statKeyColor = case keyColor cfg of
+            Nothing  -> defaultKeyColor mainConfig
+            Just val -> val
+        statValueColor = case valueColor cfg of
+            Nothing  -> defaultValueColor mainConfig
+            Just val -> val
+        statStrokeWidth = case strokeWidth cfg of
+            Nothing  -> defaultStrokeWidth mainConfig
+            Just val -> val
 
 -- Write a string with a color and position to the surface.
-writeText :: String -> String -> Color -> Color -> Double -> Position -> Render ()
-writeText keyString valString keyColor valColor strokeWidth (Position x y) = do
+writeText :: String -> String -> Color -> Color -> Double -> Position -> Position -> Render ()
+writeText keyString valString keyColor valColor strokeWidth (Position orgX orgY) (Position x y) = do
 
     s <- status
     case s of 
@@ -158,7 +173,7 @@ writeText keyString valString keyColor valColor strokeWidth (Position x y) = do
     render = do
         save
 
-        moveTo x y
+        moveTo (orgX + x) (orgY + y)
         textPath keyString
         setSourceRGBA (red keyColor) (green keyColor) (blue keyColor) (alpha keyColor)
         fillPreserve

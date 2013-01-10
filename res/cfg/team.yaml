@@ -1,31 +1,44 @@
 ## Example Team configuration file.  See "user.yaml" for details.
+# This example file is very basic.  Look at user.yaml for a much
+# better example.
 
 # The query url used for getting team statistics
-queryURL:   http://folding.extremeoverclocking.com/xml/team_summary.php?t=
+query_url:   http://folding.extremeoverclocking.com/xml/team_summary.php?t=
 
-statConfigs:
+position_origin:
+    x: 0
+    y: 0
+
+# Default font settings.  Any of these may be overridden by defining them
+# in an individual key's configuration section.
+font_face: monospace    # The font to use
+font_size: 12           # The font size
+stroke_width: 0.25      # The stroke width to apply to the font.
+key_color:              # The key color
+    r: 1.0
+    g: 1.0
+    b: 1.0
+    a: 1.0
+val_color:              # The value color
+    r: 1.0
+    g: 1.0
+    b: 0.0
+    a: 1.0
+
+# Individual stat configs
+stat_configs:
   - key:  Team_Name
+    type: team
     name: Team
-    font: monospace
-    size: 16
-    color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    position:
+    use_commas: False
+    position_offset:
         x: 8
         y: 24
 
   - key:  Rank
+    type: team
     name: Rank
-    font: monospace
-    size: 16
-    color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    position:
+    use_commas: True
+    position_offset:
         x: 8
         y: 48
