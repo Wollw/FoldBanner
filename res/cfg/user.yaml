@@ -2,27 +2,33 @@
 
 # queryURL is the url used to request the XML user statistics file.
 # This is the url for querying the user database
-queryURL:   http://folding.extremeoverclocking.com/xml/user_summary.php?u=
+query_url:   http://folding.extremeoverclocking.com/xml/user_summary.php?u=
+
+font_face: monospace
+font_size: 12
+stroke_width: 0.25
+key_color:
+    r: 1.0
+    g: 1.0
+    b: 1.0
+    a: 1.0
+val_color:
+    r: 1.0
+    g: 1.0
+    b: 0.0
+    a: 1.0
+
+origin_position:
+    x: 0
+    y: 0
+
 
 # Each individual statistic must be configured separately.
-statConfigs:
+stat_configs:
   - key:  User_Name     # XML element name for the statistic
     type: user
     name: "           User: " # name that will be used on the output
-    font: monospace     # font face for the text
-    size: 12            # font size
-    stroke_width: 0.25   # The stroke size around the text.
-    comma: no
-    key_color:          # RGBA values for the key text color.  Range is 0.0-1.0
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:          # RGBA values for the value text color.  Range is 0.0-1.0
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: False
     position:           # lower left corner of the output for this statistic
         x: 12
         y: 20
@@ -30,20 +36,7 @@ statConfigs:
   - key:  Team_Rank     # Repeat for each statistic you want to display
     type: user
     name: "   Rank on Team: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 12
         y: 32
@@ -51,20 +44,7 @@ statConfigs:
   - key:  Points_24hr_Avg
     type: team
     name: " Team Daily Avg: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 203
         y: 68
@@ -72,20 +52,7 @@ statConfigs:
   - key:  Points_Today
     type: team
     name: "   Points Today: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 203
         y: 80
@@ -93,20 +60,7 @@ statConfigs:
   - key:  Users
     type: team
     name: "    Total Users: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 203
         y: 44
@@ -114,13 +68,13 @@ statConfigs:
   - key:  Points
     type: team
     name: "    Team Points: "
-    font: monospace
-    size: 12
+    font: serif
+    font_size: 9
     stroke_width: 0.25
-    comma: yes
+    use_commas: True
     key_color:
         r: 1.0
-        g: 1.0
+        g: 0.0
         b: 1.0
         a: 1.0
     val_color:
@@ -135,20 +89,7 @@ statConfigs:
   - key:  TeamID
     type: team
     name: "           Team: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: no
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: False
     position:
         x: 203
         y: 20
@@ -156,20 +97,7 @@ statConfigs:
   - key:  Team_Name
     type: team
     name: "                        "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: no
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: False
     position:
         x: 203
         y: 20
@@ -177,20 +105,7 @@ statConfigs:
   - key:  Rank
     type: team
     name: "   Rank of Team: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 203
         y: 32
@@ -198,20 +113,7 @@ statConfigs:
   - key:  Overall_Rank
     type: user
     name: "   Overall Rank: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 12
         y: 44
@@ -219,20 +121,7 @@ statConfigs:
   - key:  WUs
     type: user
     name: "       User WUs: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 12
         y: 80
@@ -240,20 +129,7 @@ statConfigs:
   - key:  Points
     type: user
     name: "    User Points: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 12
         y: 56
@@ -261,20 +137,7 @@ statConfigs:
   - key:  Points_24hr_Avg
     type: user
     name: " User Daily Avg: "
-    font: monospace
-    size: 12
-    stroke_width: 0.25
-    comma: yes
-    key_color:
-        r: 1.0
-        g: 1.0
-        b: 1.0
-        a: 1.0
-    val_color:
-        r: 1.0
-        g: 1.0
-        b: 0.0
-        a: 1.0
+    use_commas: True
     position:
         x: 12
         y: 68

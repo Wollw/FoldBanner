@@ -14,6 +14,7 @@ import Data.Maybe
 import Graphics.Rendering.Cairo
 import Network.Curl.Download
 import System.Console.CmdArgs
+import qualified System.Console.CmdArgs as CA
 import System.Directory
 import System.Environment (getArgs, withArgs)
 import System.Exit
@@ -40,15 +41,15 @@ myProgOpts = MyOptions
 
 getOpts :: IO MyOptions
 getOpts = cmdArgs $ myProgOpts
-    &= verbosityArgs [explicit, name "Verbose", name "V"] []
-    &= versionArg [explicit, name "version", name "v", summary _PROGRAM_INFO]
+    &= verbosityArgs [explicit, CA.name "Verbose", CA.name "V"] []
+    &= versionArg [explicit, CA.name "version", CA.name "v", summary _PROGRAM_INFO]
     &= summary (_PROGRAM_INFO ++ ", " ++ _COPYRIGHT)
     &= help _PROGRAM_ABOUT
-    &= helpArg [explicit, name "help", name "h"]
+    &= helpArg [explicit, CA.name "help", CA.name "h"]
     &= program _PROGRAM_NAME
 
 _PROGRAM_NAME = "foldbanner"
-_PROGRAM_VERSION = "1.0.3"
+_PROGRAM_VERSION = "1.0.4"
 _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_ABOUT = "A configurable program for generating statistics banners for Folding@home"
 _COPYRIGHT = "(C) David Shere 2012"
@@ -105,7 +106,7 @@ getStats :: BannerConfig -> StatSource -> IO (Maybe Element)
 getStats cfg (StatID id) = do
     putStrLn $ show $ queryURL cfg
     case queryURL cfg of
-        Nothing  -> putStrLn "No queryURL in config file." >> exitWith (ExitFailure 1);
+        Nothing  -> putStrLn "No query_url in config file." >> exitWith (ExitFailure 1);
         Just val -> do
             xml <- openAsXML $ val ++ id
             case xml of
@@ -125,19 +126,19 @@ createBanner cfg stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
     surfaceWriteToPNG surface out
     return ()
   where
-    writeStat (StatConfig key key_type name fontFace size key_color val_color stroke_width use_commas pos) = do
-        selectFontFace fontFace FontSlantNormal FontWeightNormal
-        setFontSize size
-        let value = if use_commas == "no" then
-                getData key_type key
+    writeStat cfg = do
+        selectFontFace (fromJust $ fontFace cfg) FontSlantNormal FontWeightNormal
+        setFontSize $ fromJust $ fontSize cfg
+        let value = if fromJust $ useCommas cfg then
+                addCommas $ getData (keyType cfg) (key cfg)
             else
-                addCommas $ getData key_type key
-        writeText name value key_color val_color stroke_width pos
-    getData key_type key = case findElementByName key_type key stats of
+                getData (keyType cfg) (key cfg)
+        writeText (BannerConfig.name cfg) value (fromJust $ keyColor cfg) (fromJust $ valueColor cfg) (fromJust $ strokeWidth cfg) (position cfg)
+    getData keyType key = case findElementByName keyType key stats of
         Nothing -> "Error"
         Just e  -> strContent e
-    findElementByName key_type key stats = findElement (unqual key) $
-        fromJust $ findElement (unqual key_type) stats
+    findElementByName keyType key stats = findElement (unqual key) $
+        fromJust $ findElement (unqual keyType) stats
     addCommas x = h++t -- addCommas function based on code from here:
       where            -- http://stackoverflow.com/a/3753207/816685
         sp = break (== '.') x
