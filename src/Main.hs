@@ -138,10 +138,9 @@ createBanner mainConfig stats out bg = withImageSurfaceFromPNG bg $ \surface -> 
     writeStat cfg = do
         selectFontFace statFontFace FontSlantNormal FontWeightNormal
         setFontSize statFontSize
-        let value = if fromJust $ useCommas cfg then
-                addCommas $ getData (keyType cfg) (key cfg)
-            else
-                getData (keyType cfg) (key cfg)
+        let value = if fromJust $ useCommas cfg
+                then do addCommas $ getData (keyType cfg) (key cfg)
+                else getData (keyType cfg) (key cfg)
         writeText (BannerConfig.name cfg) value statKeyColor statValueColor statStrokeWidth (originPosition mainConfig) (position cfg)
       where
         statFontFace = case fontFace cfg of

@@ -3,13 +3,15 @@
 This is a Folding@home banner generator configurable with
 [YAML](http://www.yaml.org/) config files.
 
-Additional required Haskell modules:
-* [cmdargs](http://hackage.haskell.org/package/cmdargs)
-* [download-curl](http://hackage.haskell.org/package/download-curl)
-* [yaml-light](http://hackage.haskell.org/package/yaml-light)
-* [xml](http://hackage.haskell.org/package/xml)
-* [cairo](http://hackage.haskell.org/package/cairo)
-* [split](http://hackage.haskell.org/package/split)
+## Install ##
+Installation should be as simple as running
+
+    $ cabal install
+
+while in the project's main directory.  This will install it in cabal's
+default bin directory.  Ordinary users probably will find the binary
+in $HOME/.cabal/bin/ and may want to add that directory to their path
+if they haven't already.
 
 ## Usage ##
 For querying the server:
