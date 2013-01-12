@@ -8,7 +8,8 @@ Installation should be as simple as running
 
     $ cabal install
 
-while in the project's main directory.  This will install it in cabal's
+while in the project's main directory.  This will install needed dependencies
+and then build and install foldbanner in cabal's
 default bin directory.  Ordinary users probably will find the binary
 in $HOME/.cabal/bin/ and may want to add that directory to their path
 if they haven't already.
