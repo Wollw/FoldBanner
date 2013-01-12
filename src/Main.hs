@@ -52,7 +52,7 @@ _PROGRAM_NAME = "foldbanner"
 _PROGRAM_VERSION = "1.0.4"
 _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_ABOUT = "A configurable program for generating statistics banners for Folding@home"
-_COPYRIGHT = "(C) David Shere 2012"
+_COPYRIGHT = "(c) 2012-2013 David Shere"
 
 main :: IO ()
 main = do
