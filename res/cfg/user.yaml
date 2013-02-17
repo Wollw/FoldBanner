@@ -5,22 +5,22 @@
 query_url:   http://folding.extremeoverclocking.com/xml/user_summary.php?u=
 
 # Position individual stat positions will be offset from.
-# Defaults to 0,0 if not defined.  Defined here anyway just for the sake of example.
-position_origin:
-    x: 0
-    y: 0
+# Defaults to 0,0
+#position_origin:
+#    x: 0
+#    y: 0
 
 # Default font settings.  Any of these may be overridden by defining them
 # in an individual key's configuration section.
-font_face: monospace    # The font to use
-font_size: 12           # The font size
-stroke_width: 0.25      # The stroke width to apply to the font.
-key_color:              # The key color
+#font_face: monospace     # The font to use. Defaults to monospace
+#font_size: 12            # The font size. Defaults to 12
+#stroke_width: 0.25       # The stroke width to apply to the font. Defaults to 0.25
+key_color:               # The key color. Defaults to Black (0,0,0,1)
     r: 1.0
     g: 1.0
     b: 1.0
     a: 1.0
-val_color:              # The value color
+val_color:               # The value color. Defaults to Black (0,0,0,1)
     r: 1.0
     g: 1.0
     b: 0.0
@@ -31,7 +31,7 @@ stat_configs:
   - key:  User_Name             # XML element name for the statistic.
     type: user                  # Type of statistic (user, team, status)
     name: "           User: "   # Display name for this key.
-    use_commas: False           # Insert commas every three characters? (True or False)
+#    use_commas: False          # Insert commas every three characters? Defaults to False
     position_offset:            # lower left corner of the output for this statistic
         x: 12                   # as offset from the position_origin
         y: 20
@@ -79,7 +79,6 @@ stat_configs:
   - key:  TeamID
     type: team
     name: "           Team: "
-    use_commas: False
     position_offset:
         x: 203
         y: 20
@@ -87,7 +86,6 @@ stat_configs:
   - key:  Team_Name
     type: team
     name: "                        "
-    use_commas: False
     position_offset:
         x: 203
         y: 20

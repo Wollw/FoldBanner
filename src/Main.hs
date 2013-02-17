@@ -21,6 +21,12 @@ import System.Exit
 import Text.XML.Light
 import Text.XML.Light.Cursor
 import Text.XML.Light.Input
+import Codec.Picture.Bitmap
+import Codec.Picture.Png
+import Codec.Picture.Jpg
+import Codec.Picture.Gif
+import Codec.Picture.Saving
+
 
 data MyOptions = MyOptions
     { config     :: FilePath
@@ -49,7 +55,7 @@ getOpts = cmdArgs $ myProgOpts
     &= program _PROGRAM_NAME
 
 _PROGRAM_NAME = "foldbanner"
-_PROGRAM_VERSION = "1.0.4"
+_PROGRAM_VERSION = "1.0.5"
 _PROGRAM_INFO = _PROGRAM_NAME ++ " version " ++ _PROGRAM_VERSION
 _PROGRAM_ABOUT = "A configurable program for generating statistics banners for Folding@home"
 _COPYRIGHT = "(c) 2012-2013 David Shere"
@@ -122,6 +128,10 @@ getStats cfg (StatFile file) = do
 createBanner :: BannerConfig -> Element -> FilePath -> FilePath -> IO ()
 createBanner mainConfig stats out bg = withImageSurfaceFromPNG bg $ \surface -> do
     renderWith surface $ do mapM_ writeStat $ statConfigs mainConfig
+    --image <- imageSurfaceGetData surface
+    --case decodeBitmap image of
+    --    Left err  -> putStrLn err >> exitWith (ExitFailure 1)
+    --    Right img -> writeDynamicPng out img
     surfaceWriteToPNG surface out
     return ()
   where
@@ -138,7 +148,7 @@ createBanner mainConfig stats out bg = withImageSurfaceFromPNG bg $ \surface -> 
     writeStat cfg = do
         selectFontFace statFontFace FontSlantNormal FontWeightNormal
         setFontSize statFontSize
-        let value = if fromJust $ useCommas cfg
+        let value = if useCommas cfg
                 then do addCommas $ getData (keyType cfg) (key cfg)
                 else getData (keyType cfg) (key cfg)
         writeText (BannerConfig.name cfg) value statKeyColor statValueColor statStrokeWidth (originPosition mainConfig) (position cfg)

@@ -10,7 +10,7 @@ module BannerConfig
         ,defaultKeyColor
         ,defaultValueColor
         ,defaultStrokeWidth
-        --,defaultUseCommas
+        ,defaultUseCommas
         ,statConfigs)
     ,StatConfig(
          StatConfig
@@ -51,7 +51,7 @@ data BannerConfig = BannerConfig
     , defaultKeyColor    :: Color    -- 
     , defaultValueColor  :: Color    -- 
     , defaultStrokeWidth :: Double   --
-    --, defaultUseCommas       :: Bool     --
+    , defaultUseCommas       :: Bool     --
     , statConfigs     :: [StatConfig]
     } deriving (Show)
 
@@ -65,7 +65,7 @@ data StatConfig = StatConfig
     , keyColor     :: Maybe Color    -- The color to use for the key name
     , valueColor   :: Maybe Color    -- The color to use for the value
     , strokeWidth  :: Maybe Double   -- The amount to stroke the text
-    , useCommas    :: Maybe Bool   -- Wether or not to add commas
+    , useCommas    :: Bool   -- Wether or not to add commas
     } deriving (Show)
 
 data Color = Color
@@ -92,12 +92,12 @@ readBannerConfig configFile = do
         ( BannerConfig
             { queryURL           = getString "query_url" map
             , originPosition     = getPosition "position_origin" map
-            , defaultFontFace    = fromJust $ getString "font_face" map
-            , defaultFontSize    = fromJust $ getString "font_size" map >>= toDouble
-            , defaultKeyColor    = fromJust $ getColor "key_color" map
-            , defaultValueColor  = fromJust $ getColor "val_color" map
-            , defaultStrokeWidth = fromJust $ getString "stroke_width" map >>= toDouble
-            --, defaultUseCommas   = getString "use_commas" map >>= toBool
+            , defaultFontFace    = fromMaybe "monospace" $ getString "font_face" map
+            , defaultFontSize    = fromMaybe 12.0 $ getString "font_size" map >>= toDouble
+            , defaultKeyColor    = fromMaybe (Color 0 0 0 1) $ getColor "key_color" map
+            , defaultValueColor  = fromMaybe (Color 0 0 0 1) $ getColor "val_color" map
+            , defaultStrokeWidth = fromMaybe 0.25 $ getString "stroke_width" map >>= toDouble
+            , defaultUseCommas   = fromMaybe False $ getString "use_commas" map >>= toBool
             , statConfigs        = getStatConfigs map })
     toDouble val = Just (read val :: Double)
     toBool   val = Just (read val :: Bool)
@@ -114,16 +114,16 @@ getStatConfigs map = case lookup of
     lookup = M.lookup (YStr "stat_configs") map >>= unSeq
              >>= mapM (\cfgMap -> Just (getStatConfig (unMap cfgMap)))
     getStatConfig map = StatConfig {
-             key          = fromJust $ getString "key" (fromJust map),
-             keyType      = fromJust $ getString "type" (fromJust map),
-             name         = fromJust $ getString "name" (fromJust map),
+             key          = fromMaybe "null" $ getString "key" (fromJust map),
+             keyType      = fromMaybe "null" $ getString "type" (fromJust map),
+             name         = fromMaybe "null" $ getString "name" (fromJust map),
              position     = getPosition "position_offset" (fromJust map),
              fontFace     = getString "font_face" (fromJust map),
              fontSize     = getString "font_size" (fromJust map) >>= toDouble,
              keyColor     = getColor  "key_color" (fromJust map),
              valueColor   = getColor  "val_color" (fromJust map),
              strokeWidth  = getString "stroke_width" (fromJust map) >>= toDouble,
-             useCommas    = getString "use_commas" (fromJust map) >>= toBool
+             useCommas    = fromMaybe False $ getString "use_commas" (fromJust map) >>= toBool
              }
     toDouble val = Just (read val :: Double)
     toBool   val = Just (read val :: Bool)
@@ -138,10 +138,10 @@ getColor :: BS.ByteString -> Map YamlLight YamlLight -> Maybe Color
 getColor key map = getValue key map >>= unMap >>= makeColor
   where
     makeColor map = Just (Color
-                         (fromJust (getString "r" map >>= toDouble))
-                         (fromJust (getString "g" map >>= toDouble))
-                         (fromJust (getString "b" map >>= toDouble))
-                         (fromJust (getString "a" map >>= toDouble)))
+                         (fromMaybe 0 (getString "r" map >>= toDouble))
+                         (fromMaybe 0 (getString "g" map >>= toDouble))
+                         (fromMaybe 0 (getString "b" map >>= toDouble))
+                         (fromMaybe 1 (getString "a" map >>= toDouble)))
     toDouble val = Just (read val :: Double)
 
 getPosition :: BS.ByteString -> Map YamlLight YamlLight -> Position
